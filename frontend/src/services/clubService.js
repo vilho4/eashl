@@ -1,5 +1,10 @@
-const baseUrl = 'http://localhost:5000'
 const myInt = import.meta.env.VITE_MY_INT
+
+// Base URL riippuu ympäristöstä
+const baseUrl =
+  import.meta.env.MODE === 'development'
+    ? 'http://localhost:5000' // kehityksessä
+    : '' // tuotannossa Renderissä sama domain
 
 export async function getMatches(id = myInt, matchType = 'gameType5') {
   const url = `${baseUrl}/matches/${id}?matchType=${matchType}`
