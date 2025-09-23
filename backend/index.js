@@ -74,12 +74,14 @@ app.get("/matches/:id", async (req, res) => {
   }
 });
 
-// --- Wildcard route to serve React app ---
-app.get("/*", (req, res) => {
+// --- Fallback route for React SPA ---
+// All other requests serve index.html
+app.use((req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 
 // --- Start server ---
 app.listen(port, () => {
+  console.log("v.001");
   console.log(`Proxy backend running on http://localhost:${port}`);
 });
