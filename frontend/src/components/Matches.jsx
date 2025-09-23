@@ -34,11 +34,16 @@ export default function Matches({ clubId }) {
         )
         const opponentData = m.clubs[opponentId]
         const opponentDetails = opponentData?.details
+        console.log(m.timestamp)
 
         return (
           <div key={m.matchId} className="match-card">
             <p>
               <strong>ID:</strong> {m.matchId}
+            </p>
+            <p>
+              <strong>Aika:</strong>{' '}
+              {new Date(m.timestamp * 1000).toLocaleString('fi-FI')}
             </p>
             <p>
               <strong>Seura:</strong> {details?.name ?? 'N/A'}
