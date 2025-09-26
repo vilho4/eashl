@@ -13,9 +13,13 @@ export default function MatchPlayers({ match, myClubId }) {
           <tr>
             <th>Name</th>
             <th>Position</th>
+            <th>Player Level</th>
             <th>Goals</th>
             <th>Assists</th>
             <th>Shots</th>
+            <th>Shot Attempts</th>
+            <th>Shot %</th>
+            <th>Shots on Goal %</th>
             <th>Passes</th>
             <th>Pass Attempts</th>
             <th>Pass %</th>
@@ -23,6 +27,8 @@ export default function MatchPlayers({ match, myClubId }) {
             <th>Giveaways</th>
             <th>Takeaways</th>
             <th>Interceptions</th>
+            <th>Hits</th>
+            <th>Posession</th>
             <th>Rating Offense</th>
             <th>Rating Defense</th>
             <th>Rating Teamplay</th>
@@ -34,9 +40,13 @@ export default function MatchPlayers({ match, myClubId }) {
             <tr key={p.playername}>
               <td>{p.playername}</td>
               <td>{p.position}</td>
+              <td>{p.playerLevel}</td>
               <td>{p.skgoals}</td>
               <td>{p.skassists}</td>
               <td>{p.skshots}</td>
+              <td>{p.skshotattempts}</td>
+              <td>{p.skshotpct}</td>
+              <td>{p.skshotonnetpct}</td>
               <td>{p.skpasses}</td>
               <td>{p.skpassattempts}</td>
               <td>{p.skpasspct}</td>
@@ -44,6 +54,8 @@ export default function MatchPlayers({ match, myClubId }) {
               <td>{p.skgiveaways}</td>
               <td>{p.sktakeaways}</td>
               <td>{p.skinterceptions}</td>
+              <td>{p.skhits}</td>
+              <td>{p.skpossession}</td>
               <td>{p.ratingOffense}</td>
               <td>{p.ratingDefense}</td>
               <td>{p.ratingTeamplay}</td>

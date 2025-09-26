@@ -51,8 +51,14 @@
     white-space: nowrap; /* estää rivittymisen */
   }
 
+  .players-table-container {
+    overflow-x: auto;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.2);
+  }
   /* Fade oikealle, näyttää että sisältöä voi scrollata */
-  .players-table-container::after {
+  /* .players-table-container::after {
     content: '';
     position: absolute;
     top: 0;
@@ -65,7 +71,7 @@
       rgba(245, 245, 245, 0),
       rgba(245, 245, 245, 1)
     );
-  }
+  } */
 
   .players-table th,
   .players-table td {

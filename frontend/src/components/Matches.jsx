@@ -28,13 +28,12 @@ export default function Matches({ clubId }) {
         const clubData = m.clubs[myClubId]
         const details = clubData?.details
 
-        // Etsi vastustajan ID (se joka ei ole oma clubId)
         const opponentId = Object.keys(m.clubs).find(
           (id) => id !== String(myClubId)
         )
         const opponentData = m.clubs[opponentId]
         const opponentDetails = opponentData?.details
-        console.log(m.timestamp)
+        // console.log(opponentDetails.clubId, 'vastustaja')
 
         return (
           <div key={m.matchId} className="match-card">
@@ -52,11 +51,19 @@ export default function Matches({ clubId }) {
               <strong>Seura ID:</strong> {details?.clubId ?? 'N/A'}
             </p>
             <p>
-              <strong>Lopputulos:</strong> {clubData?.scoreString ?? 'N/A'}
+              <strong>Lopputulos(koti-vieras?):</strong>{' '}
+              {clubData?.scoreString ?? 'N/A'}
+            </p>
+            <p>
+              <strong>GF - GA:</strong> {clubData?.gfraw ?? 'N/A'}-
+              {clubData?.garaw ?? 'N/A'}
             </p>
 
             {/* Pelaajien tilastot */}
+            <h3>{details?.name ?? 'N/A'}</h3>
             <MatchPlayers match={m} myClubId={myClubId} />
+            <h3>{opponentDetails?.name ?? 'N/A'}</h3>
+            <MatchPlayers match={m} myClubId={opponentDetails.clubId} />
           </div>
         )
       })}
