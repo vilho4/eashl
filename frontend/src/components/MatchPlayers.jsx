@@ -6,6 +6,12 @@ export default function MatchPlayers({ match, myClubId }) {
 
   const players = Object.values(playerData)
 
+  function formatSecondsToMMSS(seconds) {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
   return (
     <div className="players-table-container">
       <table className="players-table">
@@ -16,6 +22,7 @@ export default function MatchPlayers({ match, myClubId }) {
             <th>Player Level</th>
             <th>Goals</th>
             <th>Assists</th>
+            <th>+/-</th>
             <th>Shots</th>
             <th>Shot Attempts</th>
             <th>Shot %</th>
@@ -28,6 +35,7 @@ export default function MatchPlayers({ match, myClubId }) {
             <th>Takeaways</th>
             <th>Interceptions</th>
             <th>Hits</th>
+            <th>Blocks</th>
             <th>Posession</th>
             <th>Rating Offense</th>
             <th>Rating Defense</th>
@@ -43,6 +51,7 @@ export default function MatchPlayers({ match, myClubId }) {
               <td>{p.playerLevel}</td>
               <td>{p.skgoals}</td>
               <td>{p.skassists}</td>
+              <td>{p.skplusmin}</td>
               <td>{p.skshots}</td>
               <td>{p.skshotattempts}</td>
               <td>{p.skshotpct}</td>
@@ -55,7 +64,9 @@ export default function MatchPlayers({ match, myClubId }) {
               <td>{p.sktakeaways}</td>
               <td>{p.skinterceptions}</td>
               <td>{p.skhits}</td>
-              <td>{p.skpossession}</td>
+              <td>{p.skbs}</td>
+              <td>{formatSecondsToMMSS(p.skpossession)}</td>
+              {/* <td>{p.skpossession}</td> */}
               <td>{p.ratingOffense}</td>
               <td>{p.ratingDefense}</td>
               <td>{p.ratingTeamplay}</td>
