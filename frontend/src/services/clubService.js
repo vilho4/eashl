@@ -8,7 +8,7 @@ const baseUrl =
 // Fetch matches for a club
 export async function getMatches(id = myInt, matchType = 'gameType5') {
   const url = `${baseUrl}/matches/${id}?matchType=${matchType}`
-  console.log('Fetching matches from:', url)
+  // console.log('Fetching matches from:', url)
   const res = await fetch(url)
   if (!res.ok) {
     const text = await res.text()
@@ -21,7 +21,7 @@ export async function getMatches(id = myInt, matchType = 'gameType5') {
 // Search clubs by name
 export const fetchClubs = async (name) => {
   const url = `${baseUrl}/clubsearch/${encodeURIComponent(name)}`
-  console.log('Fetching clubs from:', url)
+  // console.log('Fetching clubs from:', url)
   const res = await fetch(url)
   if (!res.ok) {
     const text = await res.text()

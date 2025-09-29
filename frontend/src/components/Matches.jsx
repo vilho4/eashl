@@ -7,6 +7,8 @@ import { useParams } from 'react-router-dom'
 export default function Matches({ clubId: propClubId }) {
   const params = useParams()
   const clubId = params.id || propClubId
+  // console.log(clubId, 'tämä on clubid')
+  // console.log(params.id, 'paramsid')
   const {
     data: matches,
     isLoading,
@@ -29,20 +31,21 @@ export default function Matches({ clubId: propClubId }) {
   // console.log(clubIds[0])
   // console.log(clubIds[1])
 
-  const myClubId = clubId
+  // const myClubId = clubId
 
   return (
     <div className="matches-container">
       <h2>Ottelut</h2>
       {matches.map((m) => {
         const joukkueID = Object.keys(m.clubs)
-        // console.log(joukkueID)
         const clubData = m.clubs[joukkueID[0]]
         const details = clubData?.details
-
         const opponentId = joukkueID[1]
         const opponentData = m.clubs[opponentId]
         const opponentDetails = opponentData?.details
+
+        // console.log(details.name)
+        // console.log(opponentDetails.name)
         // console.log(opponentDetails.clubId, 'vastustaja')
 
         return (
@@ -55,10 +58,12 @@ export default function Matches({ clubId: propClubId }) {
               {new Date(m.timestamp * 1000).toLocaleString('fi-FI')}
             </p>
             <p>
-              <strong>Seura:</strong> {details?.name ?? 'N/A'}
+              <strong>Kotijoukkue:</strong> {details?.name ?? 'N/A'}{' '}
+              <strong>Vierasjoukkue:</strong> {opponentDetails?.name ?? 'N/A'}
             </p>
             <p>
-              <strong>Seura ID:</strong> {details?.clubId ?? 'N/A'}
+              <strong>Koti ID:</strong> {details?.clubId ?? 'N/A'}{' '}
+              <strong>Vieras ID:</strong> {opponentDetails?.clubId ?? 'N/A'}
             </p>
             <p>
               <strong>Lopputulos(koti-vieras?):</strong>{' '}
@@ -71,9 +76,9 @@ export default function Matches({ clubId: propClubId }) {
 
             {/* Pelaajien tilastot */}
             <h3>{details?.name ?? 'N/A'}</h3>
-            <MatchPlayers match={m} myClubId={myClubId} />
+            <MatchPlayers match={m} myClubId={joukkueID[0]} />
             <h3>{opponentDetails?.name ?? 'N/A'}</h3>
-            <MatchPlayers match={m} myClubId={opponentDetails.clubId} />
+            <MatchPlayers match={m} myClubId={joukkueID[1]} />
           </div>
         )
       })}

@@ -1,8 +1,3 @@
-/* ---------------------------
-   Pelaajataulukko & kontti
-   --------------------------- */
-
-/* Oletuksena (desktop) taulukko täyttää koko leveyden ilman scrollia */
 .players-table-container {
   width: 100%;
   margin-top: 1rem;
@@ -52,10 +47,9 @@
   }
 
   .players-table-container {
-    overflow-x: auto;
-    position: relative;
-    -webkit-overflow-scrolling: touch;
-    box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 8px; /* pieni väli seuraavaan elementtiin */
   }
   /* Fade oikealle, näyttää että sisältöä voi scrollata */
   /* .players-table-container::after {
@@ -82,11 +76,12 @@
 }
 
 .match-card {
-  border: 2px solid #161616; /* lisätty selkeä sininen reunus */
+  border: 2px solid #161616;
   border-radius: 10px;
   padding: 1rem;
   background-color: #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  margin-bottom: 8px;
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease,
@@ -94,7 +89,6 @@
     border-color 0.25s ease;
 }
 
-/* Hover-efekti, reunus hieman korostuu */
 .match-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
@@ -117,7 +111,8 @@
   padding: 12px;
   background-color: #fafafa;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  max-width: 500px; /* rajoittaa kortin leveyden */
+  max-width: 500px;
+  margin-bottom: 8px;
 }
 
 .club-name {
@@ -134,15 +129,15 @@
 }
 
 .club-table {
-  width: auto; /* ei täytä koko kortin leveyttä */
+  width: auto;
   border-collapse: collapse;
-  font-size: 0.9rem; /* pienempi teksti */
+  font-size: 0.9rem;
 }
 
 .club-table th,
 .club-table td {
   border: 1px solid #ccc;
-  padding: 4px 8px; /* pienemmät solut */
+  padding: 4px 8px;
   text-align: left;
 }
 
