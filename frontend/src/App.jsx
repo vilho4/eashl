@@ -1,13 +1,25 @@
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import Home from './Pages/Home'
+import SearchClub from './Pages/SearchClub'
 import Matches from './components/Matches'
 
 const App = () => {
-  const myClubId = 40702 // tai import.meta.env.VITE_MY_INT
+  const myClubId = import.meta.env.VITE_MY_INT
 
   return (
-    <div>
-      <h1>Keupa Esports</h1>
-      <Matches clubId={myClubId} />
-    </div>
+    <Router>
+      <header>
+        <nav>
+          <Link to="/">Home</Link> | <Link to="/searchclub">Search Clubs</Link>
+        </nav>
+      </header>
+
+      <Routes>
+        <Route path="/" element={<Home clubId={myClubId} />} />
+        <Route path="/searchclub" element={<SearchClub />} />
+        <Route path="/club/:id" element={<Matches />} />
+      </Routes>
+    </Router>
   )
 }
 

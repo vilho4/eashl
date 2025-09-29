@@ -22,6 +22,12 @@ Thumbs.db
 # Logs
 *.log
 
+# REST
+*.rest
+*.rest.json
+rest/
+
+
 # Optional: cache folders
 .cache/
 

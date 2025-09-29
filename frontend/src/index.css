@@ -101,3 +101,51 @@
   background-color: #fafafa;
   border-color: #ece7e7; /* hover-reunus */
 }
+
+.errornotification {
+  color: white;
+  background-color: red;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.club-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #fafafa;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  max-width: 500px; /* rajoittaa kortin leveyden */
+}
+
+.club-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: none;
+  color: #0070f3;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.club-name:hover {
+  text-decoration: underline;
+}
+
+.club-table {
+  width: auto; /* ei täytä koko kortin leveyttä */
+  border-collapse: collapse;
+  font-size: 0.9rem; /* pienempi teksti */
+}
+
+.club-table th,
+.club-table td {
+  border: 1px solid #ccc;
+  padding: 4px 8px; /* pienemmät solut */
+  text-align: left;
+}
+
+.club-table th {
+  background-color: #f0f0f0;
+}

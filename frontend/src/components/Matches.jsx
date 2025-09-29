@@ -2,8 +2,11 @@ import { useQuery } from '@tanstack/react-query'
 import { getMatches } from '../services/clubService'
 import React from 'react'
 import MatchPlayers from './MatchPlayers'
+import { useParams } from 'react-router-dom'
 
-export default function Matches({ clubId }) {
+export default function Matches({ clubId: propClubId }) {
+  const params = useParams()
+  const clubId = params.id || propClubId
   const {
     data: matches,
     isLoading,
@@ -19,18 +22,25 @@ export default function Matches({ clubId }) {
   if (isError) return <p>Virhe: {error.message}</p>
   if (!matches || matches.length === 0) return <p>Ei otteluita.</p>
 
-  const myClubId = 40702
+  // console.log(Object.keys(matches[0].clubs), 'matches-komponentti')
+
+  // const clubIds = Object.keys(matches[0].clubs)
+
+  // console.log(clubIds[0])
+  // console.log(clubIds[1])
+
+  const myClubId = clubId
 
   return (
     <div className="matches-container">
       <h2>Ottelut</h2>
       {matches.map((m) => {
-        const clubData = m.clubs[myClubId]
+        const joukkueID = Object.keys(m.clubs)
+        // console.log(joukkueID)
+        const clubData = m.clubs[joukkueID[0]]
         const details = clubData?.details
 
-        const opponentId = Object.keys(m.clubs).find(
-          (id) => id !== String(myClubId)
-        )
+        const opponentId = joukkueID[1]
         const opponentData = m.clubs[opponentId]
         const opponentDetails = opponentData?.details
         // console.log(opponentDetails.clubId, 'vastustaja')
