@@ -35,7 +35,77 @@ const defaultHeaders = {
   Connection: 'keep-alive',
 }
 
+// --- Helper: fetch with retries ---
+async function fetchWithRetries(url, options = {}, opts = {}) {
+  const {
+    retries = 3, // montako yritystä yhteensä
+    retryOn = [429, 502, 503, 504], // tilakoodit joita yritämme uudelleen
+    backoffBaseMs = 500, // alkuperäinen viive (ms)
+    logger = console, // voi korvata omalla loggerilla
+  } = opts
+
+  let attempt = 0
+  let lastError = null
+
+  while (attempt < retries) {
+    attempt++
+    try {
+      logger.log(`Attempt ${attempt}/${retries} -> ${url}`)
+      const response = await fetch(url, options)
+
+      // Jos OK, palautetaan JSON (tai tyhjä jos ei JSON)
+      if (response.ok) {
+        const text = await response.text()
+        try {
+          return {
+            ok: true,
+            status: response.status,
+            data: text ? JSON.parse(text) : null,
+          }
+        } catch (e) {
+          // jos ei JSON, palauta tekstinä
+          return { ok: true, status: response.status, data: text }
+        }
+      }
+
+      // Jos status on sellainen, jota kannattaa yrittää uudelleen -> delay ja loop
+      if (retryOn.includes(response.status) && attempt < retries) {
+        logger.warn(`Non-ok status ${response.status}. Retrying...`)
+        const delay = backoffBaseMs * Math.pow(2, attempt - 1)
+        await new Promise((r) => setTimeout(r, delay))
+        continue
+      }
+
+      // Ei ok ja ei kannata yrittää uudestaan -> lue raakateksti ja palauta virheenä
+      const text = await response.text()
+      logger.error(
+        `Final response (no retry): status=${response.status} body=${text}`
+      )
+      return { ok: false, status: response.status, raw: text }
+    } catch (err) {
+      // verkko- tai fetch-virhe (esim. timeout) -> yritä uudelleen
+      lastError = err
+      logger.error(`Fetch error on attempt ${attempt}:`, err)
+      if (attempt < retries) {
+        const delay = backoffBaseMs * Math.pow(2, attempt - 1)
+        await new Promise((r) => setTimeout(r, delay))
+        continue
+      }
+      // maxyritykset käytetty
+      logger.error(`Max retries reached (${retries}). Last error:`, lastError)
+      return { ok: false, status: 500, raw: String(lastError) }
+    }
+  }
+
+  // jos loop päättyi jotenkin (ei pitäisi)
+  return { ok: false, status: 500, raw: 'Unknown fetch error' }
+}
+
 // --- API ROUTES ---
+
+fetch('https://api.ipify.org?format=json')
+  .then((r) => r.json())
+  .then((ip) => console.log('Public IP from Render:', ip))
 
 // GET club info
 app.get('/club', async (req, res) => {
@@ -43,9 +113,22 @@ app.get('/club', async (req, res) => {
     const url = `${apiUrl}/clubs/info?platform=common-gen5&clubIds=${myInt}`
     console.log('Fetching EA API:', url)
 
-    const response = await fetch(url, { headers: defaultHeaders })
-    const data = await response.json()
-    res.json(data)
+    const result = await fetchWithRetries(
+      url,
+      { headers: defaultHeaders },
+      { retries: 3 }
+    )
+
+    if (!result.ok) {
+      return res.status(result.status === 500 ? 502 : result.status).json({
+        error: `EA API error ${result.status}`,
+        raw: result.raw,
+        attempts: 3,
+      })
+    }
+
+    // result.data sisältää jo JSON-objektin
+    res.json(result.data)
   } catch (err) {
     console.error('Backend error:', err)
     res.status(500).json({ error: err.message })
@@ -61,13 +144,21 @@ app.get('/matches/:id', async (req, res) => {
     const url = `${apiUrl}/clubs/matches?matchType=${matchType}&platform=common-gen5&clubIds=${id}`
     console.log('Fetching EA API:', url)
 
-    const response = await fetch(url, { headers: defaultHeaders })
-    if (!response.ok) {
-      throw new Error(`EA API error ${response.status}`)
+    const result = await fetchWithRetries(
+      url,
+      { headers: defaultHeaders },
+      { retries: 3 }
+    )
+
+    if (!result.ok) {
+      return res.status(result.status === 500 ? 502 : result.status).json({
+        error: `EA API error ${result.status}`,
+        raw: result.raw,
+        attempts: 3,
+      })
     }
 
-    const data = await response.json()
-    res.json(data)
+    res.json(result.data)
   } catch (err) {
     console.error('Backend error:', err)
     res.status(500).json({ error: err.message })
@@ -79,19 +170,24 @@ app.get('/clubsearch/:name', async (req, res) => {
   try {
     const { name } = req.params
 
-    const url = `${apiUrl}/clubs/search?platform=common-gen5&clubName=${encodeURIComponent(
-      name
-    )}`
+    const url = `${apiUrl}/clubs/search?platform=common-gen5&clubName=${encodeURIComponent(name)}`
     console.log('Search parameter:', name, 'address:', url)
 
-    const response = await fetch(url, { headers: defaultHeaders })
-    if (!response.ok) {
-      throw new Error(`EA API error ${response.status}`)
+    const result = await fetchWithRetries(
+      url,
+      { headers: defaultHeaders },
+      { retries: 3 }
+    )
+
+    if (!result.ok) {
+      return res.status(result.status === 500 ? 502 : result.status).json({
+        error: `EA API error ${result.status}`,
+        raw: result.raw,
+        attempts: 3,
+      })
     }
 
-    const data = await response.json()
-
-    const results = Object.entries(data).map(([clubId, clubData]) => ({
+    const results = Object.entries(result.data).map(([clubId, clubData]) => ({
       clubId,
       ...clubData,
     }))
